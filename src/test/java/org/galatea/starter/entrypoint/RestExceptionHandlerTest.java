@@ -33,13 +33,6 @@ public class RestExceptionHandlerTest {
   }
 
   @Test
-  public void handleHttpMessageNotReadable() {
-    HttpMessageNotReadableException exception = new HttpMessageNotReadableException("msg");
-    ResponseEntity<Object> response = handler.handleHttpMessageNotReadable(exception);
-    assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
-  }
-
-  @Test
   public void handleDataAccessException() {
     DataAccessException exception = new DataAccessException("msg") {};
     ResponseEntity<Object> response = handler.handleDataAccessException(exception);

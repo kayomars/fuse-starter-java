@@ -1,7 +1,7 @@
 # Global properties go here
 spring:
    profiles:
-      active: test
+      active: dev
    main:
       allow-bean-definition-overriding: true
    datasource:

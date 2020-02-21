@@ -1,6 +1,8 @@
 package org.galatea.starter.translators;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,8 +24,9 @@ public class AlphaVantageResponseTranslator {
   /**
    * This function is responsible for creating instances of domain object DailyPrices.
    */
-  public void createAllDailyPricesObjects(AlphaVantageResponse avResp) {
+  public List<DailyPrices> createAllDailyPricesObjects(AlphaVantageResponse avResp) {
 
+    List<DailyPrices> allDailyPrices = new ArrayList<DailyPrices>();
     String stockSymbol = avResp.getAllMetaData().getStockSymbol();
     String freshnessDate = avResp.getAllMetaData().getFreshnessDate();
 
@@ -44,7 +47,9 @@ public class AlphaVantageResponseTranslator {
           .build();
 
       log.info(curDailyPrice.toString());
-    }
+      allDailyPrices.add(curDailyPrice);
 
+    }
+    return allDailyPrices;
   }
 }

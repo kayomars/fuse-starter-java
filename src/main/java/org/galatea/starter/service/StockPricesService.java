@@ -1,8 +1,11 @@
 package org.galatea.starter.service;
 
+import java.util.List;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.galatea.starter.domain.DailyPrices;
+import org.galatea.starter.domain.rpsy.IStocksRpsy;
 import org.galatea.starter.translators.AlphaVantageResponseTranslator;
 import org.springframework.stereotype.Service;
 
@@ -23,14 +26,28 @@ public class StockPricesService {
   @NonNull
   private AlphaVantageResponseTranslator avTranslator;
 
+  // injecting in stocks repository services to make relevant DB actions
+  @NonNull
+  private StocksRpsyService stocksRpsyService;
+
   // ALL THE LOGIC FOR DATABASE PULLS OR API PULLS WILL GO HERE
   /**
    * Logic is hard
    */
   public AlphaVantageResponse logicChain(final String stockSymbol, final int numDays) {
+
     AlphaVantageResponse thisAlphaResponse = getStockPricesFromAVAll(stockSymbol);
 
-    avTranslator.createAllDailyPricesObjects(thisAlphaResponse);
+    // Creating all the Daily Prices objects
+    List<DailyPrices> allDailyPrices = avTranslator.createAllDailyPricesObjects(thisAlphaResponse);
+
+    //Saving all to DB
+    stocksRpsyService.saveAllEntities(allDailyPrices);
+
+    // Testing
+    log.info("reached here");
+    log.info(stocksRpsyService.findEntriesInDescDateOrder(stockSymbol).toString());
+
     return thisAlphaResponse;
   }
 

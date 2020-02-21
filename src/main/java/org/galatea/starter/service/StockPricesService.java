@@ -1,15 +1,13 @@
 package org.galatea.starter.service;
 
-import java.util.Collections;
 import java.util.List;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.poi.ss.formula.functions.T;
-import org.galatea.starter.domain.IexLastTradedPrice;
 import org.galatea.starter.domain.IexSymbol;
+import org.galatea.starter.domain.ListOfDailyPrices;
+import org.galatea.starter.domain.MetaDataAndTimeSeries;
 import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
 
 /**
  * A layer for transformation, aggregation, and business required when retrieving stock prices from
@@ -28,7 +26,7 @@ public class StockPricesService {
   /**
    * Logic is hard
    */
-  public List<IexSymbol> logicChain(final String stockSymbol, final int numDays) {
+  public ListOfDailyPrices logicChain(final String stockSymbol, final int numDays) {
     return getStockPricesFromAVAll(stockSymbol);
   }
 
@@ -39,7 +37,7 @@ public class StockPricesService {
    * @param numDays, an int representing the number of days of prices to fetch
    * @return a list of all prices for that stock, for <= 100 days
    */
-  public List<IexSymbol> getStockPricesFromAVForDays(final String stockSymbol, final int numDays) {
+  public ListOfDailyPrices getStockPricesFromAVForDays(final String stockSymbol, final int numDays) {
     return alphaVClient.getPricesOfStockForDays(stockSymbol);
   }
 
@@ -50,7 +48,7 @@ public class StockPricesService {
    * @param stockSymbol, a String representing the symbol of the stock
    * @return a list of all prices for that stock in all available history
    */
-  public List<IexSymbol> getStockPricesFromAVAll(final String stockSymbol) {
+  public ListOfDailyPrices getStockPricesFromAVAll(final String stockSymbol) {
     return alphaVClient.getAllPricesOfStock(stockSymbol);
   }
 

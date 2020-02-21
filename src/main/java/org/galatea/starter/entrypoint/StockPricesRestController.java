@@ -6,9 +6,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.aspect4log.Log;
 import net.sf.aspect4log.Log.Level;
-import org.apache.poi.ss.formula.functions.T;
-import org.galatea.starter.domain.IexLastTradedPrice;
 import org.galatea.starter.domain.IexSymbol;
+import org.galatea.starter.domain.ListOfDailyPrices;
+import org.galatea.starter.domain.MetaDataAndTimeSeries;
 import org.galatea.starter.service.StockPricesService;
 import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
@@ -34,7 +34,7 @@ public class StockPricesRestController {
    */
   @GetMapping(value = "${mvc.stocks.getPricesForDaysPath}", produces = {
       MediaType.APPLICATION_JSON_VALUE})
-  public List<IexSymbol> getLastTradedPrice(
+  public ListOfDailyPrices getPrices(
       @RequestParam(value = "stock") final String stockSymbol, @RequestParam(value = "days") final int numDays) {
     return stockPricesService.logicChain(stockSymbol, numDays);
   }

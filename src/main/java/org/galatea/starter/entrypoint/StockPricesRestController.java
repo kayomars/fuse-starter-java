@@ -25,7 +25,7 @@ public class StockPricesRestController {
 
   /**
    * Exposes an endpoint to get the prices of a given stock in the last N days.
-   * @param symbol, the String representation of the stock symbol
+   * @param stockSymbol the String representation of the stock symbol
    * @param numDays, the int representation of the number of days
    * @return a list of all stock prices of that given stock in the last N days.
    */
@@ -33,7 +33,7 @@ public class StockPricesRestController {
       MediaType.APPLICATION_JSON_VALUE})
   public AlphaVantageResponse getPrices(
       @RequestParam(value = "stock") final String stockSymbol, @RequestParam(value = "days") final int numDays) {
-    return stockPricesService.logicChain(stockSymbol, numDays);
+    return stockPricesService.getStockPrices(stockSymbol, numDays);
   }
 
 }

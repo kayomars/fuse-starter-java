@@ -25,9 +25,9 @@ public class StockPricesService {
 
   // ALL THE LOGIC FOR DATABASE PULLS OR API PULLS WILL GO HERE
   /**
-   * Logic is hard
+   * Get Stock Prices
    */
-  public AlphaVantageResponse logicChain(final String stockSymbol, final int numDays) {
+  public AlphaVantageResponse getStockPrices(final String stockSymbol, final int numDays) {
     AlphaVantageResponse thisAlphaResponse = getStockPricesFromAVAll(stockSymbol);
 
     avTranslator.createAllDailyPricesObjects(thisAlphaResponse);

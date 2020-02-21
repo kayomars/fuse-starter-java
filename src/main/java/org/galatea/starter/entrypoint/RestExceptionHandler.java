@@ -64,15 +64,6 @@ public class RestExceptionHandler {
     return buildResponseEntity(error);
   }
 
-  @ExceptionHandler(ObjectOptimisticLockingFailureException.class)
-  protected ResponseEntity<Object> handleOptimisticLockException(
-      final ObjectOptimisticLockingFailureException exception) {
-    log.debug("Outdated input data sent", exception);
-
-    ApiError error = new ApiError(HttpStatus.CONFLICT, exception.toString());
-    return buildResponseEntity(error);
-  }
-
   private ResponseEntity<Object> buildResponseEntity(final ApiError apiError) {
     return new ResponseEntity<>(apiError, apiError.getStatus());
   }

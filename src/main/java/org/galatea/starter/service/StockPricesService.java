@@ -1,12 +1,9 @@
 package org.galatea.starter.service;
 
-import java.util.List;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.galatea.starter.domain.IexSymbol;
-import org.galatea.starter.domain.ListOfDailyPrices;
-import org.galatea.starter.domain.MetaDataAndTimeSeries;
+import org.galatea.starter.translators.AlphaVantageResponseTranslator;
 import org.springframework.stereotype.Service;
 
 /**
@@ -22,12 +19,19 @@ public class StockPricesService {
   @NonNull
   private AlphaVantageClient alphaVClient;
 
+  // injecting in translator to make relevant translations
+  @NonNull
+  private AlphaVantageResponseTranslator avTranslator;
+
   // ALL THE LOGIC FOR DATABASE PULLS OR API PULLS WILL GO HERE
   /**
    * Logic is hard
    */
-  public ListOfDailyPrices logicChain(final String stockSymbol, final int numDays) {
-    return getStockPricesFromAVAll(stockSymbol);
+  public AlphaVantageResponse logicChain(final String stockSymbol, final int numDays) {
+    AlphaVantageResponse thisAlphaResponse = getStockPricesFromAVAll(stockSymbol);
+
+    avTranslator.createAllDailyPricesObjects(thisAlphaResponse);
+    return thisAlphaResponse;
   }
 
   /**
@@ -37,18 +41,16 @@ public class StockPricesService {
    * @param numDays, an int representing the number of days of prices to fetch
    * @return a list of all prices for that stock, for <= 100 days
    */
-  public ListOfDailyPrices getStockPricesFromAVForDays(final String stockSymbol, final int numDays) {
+  public AlphaVantageResponse getStockPricesFromAVForDays(final String stockSymbol, final int numDays) {
     return alphaVClient.getPricesOfStockForDays(stockSymbol);
   }
 
-
-  // NEED TO KEEP TRACK OF LAST DATE OF KNOWN HISTORY SOMEHOW
   /**
    * Get all prices of a specific stock for the entirety of its history.
    * @param stockSymbol, a String representing the symbol of the stock
    * @return a list of all prices for that stock in all available history
    */
-  public ListOfDailyPrices getStockPricesFromAVAll(final String stockSymbol) {
+  public AlphaVantageResponse getStockPricesFromAVAll(final String stockSymbol) {
     return alphaVClient.getAllPricesOfStock(stockSymbol);
   }
 

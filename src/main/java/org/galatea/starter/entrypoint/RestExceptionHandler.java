@@ -3,7 +3,6 @@ package org.galatea.starter.entrypoint;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import javax.validation.ConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;
-import org.galatea.starter.entrypoint.exception.EntityNotFoundException;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,13 +19,6 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 @ControllerAdvice
 @Slf4j
 public class RestExceptionHandler {
-
-  // Thrown by JPA provider when an entity is attempted to be accessed, but doesn't exist
-  @ExceptionHandler(EntityNotFoundException.class)
-  protected ResponseEntity<Object> handleEntityNotFound(final EntityNotFoundException exception) {
-    ApiError error = new ApiError(HttpStatus.NOT_FOUND, exception.toString());
-    return buildResponseEntity(error);
-  }
 
   // Failure in the data access API
   @ExceptionHandler(DataAccessException.class)

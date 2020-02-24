@@ -7,13 +7,11 @@ import static org.mockito.Mockito.mock;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
-import org.galatea.starter.entrypoint.exception.EntityNotFoundException;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.orm.ObjectOptimisticLockingFailureException;
 
 public class RestExceptionHandlerTest {
@@ -23,13 +21,6 @@ public class RestExceptionHandlerTest {
   @Before
   public void setUp() {
     handler = new RestExceptionHandler();
-  }
-
-  @Test
-  public void handleEntityNotFound() {
-    EntityNotFoundException exception = new EntityNotFoundException(Object.class, "id");
-    ResponseEntity<Object> response = handler.handleEntityNotFound(exception);
-    assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
   }
 
   @Test
@@ -55,10 +46,4 @@ public class RestExceptionHandlerTest {
     assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
   }
 
-  @Test
-  public void handleOptimisticLockException() {
-    ObjectOptimisticLockingFailureException exception = new ObjectOptimisticLockingFailureException(Object.class, "id") {};
-    ResponseEntity<Object> response = handler.handleOptimisticLockException(exception);
-    assertEquals(HttpStatus.CONFLICT, response.getStatusCode());
-  }
 }

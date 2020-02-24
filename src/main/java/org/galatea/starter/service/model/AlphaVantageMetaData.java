@@ -1,4 +1,4 @@
-package org.galatea.starter.service.AlphaVantageObjects;
+package org.galatea.starter.service.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;

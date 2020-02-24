@@ -17,16 +17,9 @@ spring:
       database-platform: org.hibernate.dialect.MySQL5Dialect
 
 mvc:
-   iex:
-      getAllSymbolsPath: /iex/symbols
-      getLastTradedPricePath: /iex/lastTradedPrice
    stocks:
       getPricesForDaysPath: /prices
-   max-size-trace-payload: 50000
-jms:
-   listener-concurrency: 1-5
-   agreement-queue-json: sandbox.agreement
-   agreement-queue-proto: sandbox.agreement.proto
+
 
 # Set debug level logging for the IEX Client so that Feign requests and responses are logged out
 log.level.org.galatea.starter.service.IEXClient: DEBUG

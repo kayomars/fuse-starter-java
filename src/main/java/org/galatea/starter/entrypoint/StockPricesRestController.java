@@ -33,7 +33,7 @@ public class StockPricesRestController {
       MediaType.APPLICATION_JSON_VALUE})
   public AlphaVantageResponse getPrices(
       @RequestParam(value = "stock") final String stockSymbol, @RequestParam(value = "days") final int numDays) {
-    return stockPricesService.logicChain(stockSymbol, numDays);
+    return stockPricesService.getStockPrices(stockSymbol, numDays);
   }
 
 }

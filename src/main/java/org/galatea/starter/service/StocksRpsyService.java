@@ -39,9 +39,6 @@ public class StocksRpsyService {
 
     List<DailyPrices> retrievedEntries = Lists.newArrayList(stocksRepo.findAllByStockSymbol(stockSymbol));
 
-    if (retrievedEntries.isEmpty()) {
-      throw new EntityNotFoundException(DailyPrices.class, "missingEntries");
-    }
     return retrievedEntries;
   }
 
@@ -57,9 +54,6 @@ public class StocksRpsyService {
         stocksRepo.findAllByStockSymbol(stockSymbol, Sort.by(
             Direction.DESC, "relatedDate")));
 
-    if (retrievedEntries.isEmpty()) {
-      throw new EntityNotFoundException(DailyPrices.class, "missingEntries");
-    }
     return retrievedEntries;
   }
 

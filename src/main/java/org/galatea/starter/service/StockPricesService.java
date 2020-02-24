@@ -32,9 +32,10 @@ public class StockPricesService {
 
   // ALL THE LOGIC FOR DATABASE PULLS OR API PULLS WILL GO HERE
   /**
-   * Logic is hard
+   * Function that will be the starting point of the logic chain that will
+   * be constructed next. Currently queries AV API, stores all to DB and then pulls all from DB
    */
-  public AlphaVantageResponse logicChain(final String stockSymbol, final int numDays) {
+  public AlphaVantageResponse getStockPrices(final String stockSymbol, final int numDays) {
 
     AlphaVantageResponse thisAlphaResponse = getStockPricesFromAVAll(stockSymbol);
 

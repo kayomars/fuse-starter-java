@@ -35,7 +35,7 @@ import org.springframework.test.web.servlet.MvcResult;
 // Use this runner since we want to parameterize certain tests.
 // See runner's javadoc for more usage.
 @RunWith(JUnitParamsRunner.class)
-public class IexRestControllerTest extends ASpringTest {
+public class StockPricesRestControllerTest extends ASpringTest {
 
   @Autowired
   private MockMvc mvc;

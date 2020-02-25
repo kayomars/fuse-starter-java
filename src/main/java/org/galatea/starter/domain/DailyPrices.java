@@ -1,15 +1,10 @@
 package org.galatea.starter.domain;
 
-import com.fasterxml.jackson.annotation.JsonAlias;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.IdClass;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -22,17 +17,15 @@ import lombok.NoArgsConstructor;
 @Builder
 @Data
 @Entity
+@IdClass(EntryId.class)
 public class DailyPrices {
 
   @Id
-  @GeneratedValue(strategy=GenerationType.AUTO)
-  @Column(name = "id")
-  private Long id;
-
   private String stockSymbol;
 
   private String freshnessDate;
 
+  @Id
   private String relatedDate;
 
   private BigDecimal open;

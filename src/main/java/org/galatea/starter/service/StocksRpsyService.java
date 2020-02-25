@@ -51,8 +51,7 @@ public class StocksRpsyService {
     log.info("Retrieving all entries with stock symbol: {}", stockSymbol);
 
     List<DailyPrices> retrievedEntries = Lists.newArrayList(
-        stocksRepo.findAllByStockSymbol(stockSymbol, Sort.by(
-            Direction.DESC, "relatedDate")));
+        stocksRepo.findByStockSymbolOrderByRelatedDateDesc(stockSymbol));
 
     return retrievedEntries;
   }

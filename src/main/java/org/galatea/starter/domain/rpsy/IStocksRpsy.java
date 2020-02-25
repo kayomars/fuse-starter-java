@@ -8,9 +8,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface IStocksRpsy extends JpaRepository<DailyPrices, Long> {
 
-  Optional<DailyPrices> findById(final Long id);
-
   List<DailyPrices> findAllByStockSymbol(String stockSymbol);
 
   List<DailyPrices> findAllByStockSymbol(String stockSymbol, Sort sort);
+
+  List<DailyPrices> findByStockSymbolOrderByRelatedDateDesc(String stockSymbol);
 }

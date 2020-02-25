@@ -5,9 +5,8 @@ import java.util.Map;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.galatea.starter.domain.DailyPrices;
-import org.galatea.starter.service.AlphaVantageObjects.AlphaVantageDailyPrices;
-import org.galatea.starter.service.AlphaVantageObjects.AlphaVantageMetaData;
+import org.galatea.starter.service.model.AlphaVantageDailyPrices;
+import org.galatea.starter.service.model.AlphaVantageMetaData;
 import org.springframework.stereotype.Service;
 
 /**

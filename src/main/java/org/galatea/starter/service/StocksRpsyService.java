@@ -8,9 +8,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.galatea.starter.domain.DailyPrices;
 import org.galatea.starter.domain.rpsy.IStocksRpsy;
-import org.galatea.starter.entrypoint.exception.EntityNotFoundException;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 
 @RequiredArgsConstructor

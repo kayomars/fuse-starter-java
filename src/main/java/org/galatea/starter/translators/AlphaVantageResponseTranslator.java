@@ -45,7 +45,6 @@ public class AlphaVantageResponseTranslator {
           .volume(relatedPrices.getVolume())
           .build();
 
-      log.info(curDailyPrice.toString());
       allDailyPrices.add(curDailyPrice);
 
     }

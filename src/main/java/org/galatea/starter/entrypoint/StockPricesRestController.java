@@ -1,5 +1,6 @@
 package org.galatea.starter.entrypoint;
 
+import java.util.List;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -32,7 +33,7 @@ public class StockPricesRestController {
   @GetMapping(value = "${mvc.stocks.getPricesForDaysPath}", produces = {
       MediaType.APPLICATION_JSON_VALUE})
   public AlphaVantageResponse getPrices(
-      @RequestParam(value = "stock") final String stockSymbol, @RequestParam(value = "days") final int numDays) {
+      @RequestParam(value = "stock") final String stockSymbol, @RequestParam(value = "days") final List<Integer> numDays) {
     return stockPricesService.getStockPrices(stockSymbol, numDays);
   }
 

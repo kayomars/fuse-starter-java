@@ -1,5 +1,6 @@
 package org.galatea.starter.service;
 
+import java.util.Collections;
 import java.util.List;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -8,6 +9,7 @@ import org.galatea.starter.domain.DailyPrices;
 import org.galatea.starter.domain.rpsy.IStocksRpsy;
 import org.galatea.starter.translators.AlphaVantageResponseTranslator;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 /**
  * A layer for transformation, aggregation, and business required when retrieving stock prices from
@@ -35,7 +37,9 @@ public class StockPricesService {
    * Function that will be the starting point of the logic chain that will
    * be constructed next. Currently queries AV API, stores all to DB and then pulls all from DB
    */
-  public AlphaVantageResponse getStockPrices(final String stockSymbol, final int numDays) {
+  public AlphaVantageResponse getStockPrices(final String stockSymbol, final List<Integer> numDays) {
+
+    // TODO: Extract numDays from list, default to 100 if not provided
 
     AlphaVantageResponse thisAlphaResponse = getStockPricesFromAVAll(stockSymbol);
 

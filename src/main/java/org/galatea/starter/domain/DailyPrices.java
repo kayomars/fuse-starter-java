@@ -1,5 +1,7 @@
 package org.galatea.starter.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import javax.persistence.Entity;
@@ -21,18 +23,23 @@ import lombok.NoArgsConstructor;
 public class DailyPrices {
 
   @Id
+  @JsonProperty("Symbol")
   private String stockSymbol;
 
   @Id
+  @JsonProperty("Date")
   private String relatedDate;
 
+  @JsonProperty("Open")
   private BigDecimal open;
 
+  @JsonProperty("High")
   private BigDecimal high;
 
+  @JsonProperty("Low")
   private BigDecimal low;
 
+  @JsonProperty("Close")
   private BigDecimal close;
 
-  private BigInteger volume;
 }

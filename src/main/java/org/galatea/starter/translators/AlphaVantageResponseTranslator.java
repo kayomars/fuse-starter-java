@@ -39,7 +39,6 @@ public class AlphaVantageResponseTranslator {
           .high(relatedPrices.getHigh())
           .low(relatedPrices.getLow())
           .close(relatedPrices.getClose())
-          .volume(relatedPrices.getVolume())
           .build();
 
       log.info(curDailyPrice.toString());

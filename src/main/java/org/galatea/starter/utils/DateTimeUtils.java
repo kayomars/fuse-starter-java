@@ -3,9 +3,9 @@ package org.galatea.starter.utils;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -13,7 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 public class DateTimeUtils {
 
   // Creating all relevant holidays
-  static List<String> allHolidays = new ArrayList<String>(Arrays.asList("2020-12-25", "2020-11-26",
+  static Set<String> allHolidays = new HashSet<>(Arrays.asList("2020-12-25", "2020-11-26",
       "2020-09-07", "2020-07-03", "2020-05-25", "2020-04-10", "2020-02-17", "2020-01-20",
       "2020-01-01",
       "2019-12-25", "2019-11-22", "2019-09-03", "2019-07-04", "2019-05-28", "2019-03-30",
@@ -33,24 +33,6 @@ public class DateTimeUtils {
   }
 
   /**
-   * Given a date in YYYY-MM-DD format as a String, calculates the total number of days between
-   * that date and today
-   * @param otherDate represents date in YYYY-MM-DD format
-   * @return number of total days between today and otherDate
-   */
-  public static Long findNumofAllDaysFromDate(String otherDate) {
-
-    LocalDate todaysDate = LocalDate.now();
-    LocalDate pastDate = LocalDate.parse(otherDate);
-
-    // Sanity check
-    if (todaysDate.isBefore(pastDate)) { return Long.valueOf(0);}
-
-    return ChronoUnit.DAYS.between(pastDate, todaysDate);
-
-  }
-
-  /**
    * Adds up the number of business days, and returns immediately if it is over 100
    * @param otherDate represents date in YYYY-MM-DD format
    * @return true if number of business days is over 100
@@ -63,10 +45,10 @@ public class DateTimeUtils {
     // Sanity check
     if (todaysDate.isBefore(prevDate)) { return false;}
 
-    LocalDate curDate = LocalDate.from(prevDate);
+    LocalDate curDate = LocalDate.from(todaysDate);
     int totalBusinessDays = 0;
-    //TODO Using contains here so change to hashset
-    while (curDate.isBefore(todaysDate)) {
+
+    while (curDate.isAfter(prevDate)) {
       DayOfWeek dow = curDate.getDayOfWeek();
       if (!(dow.equals(DayOfWeek.SATURDAY) || dow.equals(DayOfWeek.SUNDAY) || allHolidays
           .contains(curDate.toString()))) {
@@ -75,7 +57,7 @@ public class DateTimeUtils {
 
       if (totalBusinessDays > 100) { return true; }
 
-      curDate = curDate.plusDays(1);
+      curDate = curDate.minusDays(1);
     }
 
     return false;
@@ -95,10 +77,10 @@ public class DateTimeUtils {
     LocalDate prevDate = LocalDate.parse(otherDate);
 
     // Check to see if it is the same day
-    if (todaysDate.isEqual(prevDate)) { return Long.valueOf(0);}
+    if (todaysDate.isEqual(prevDate)) { return (long) 0;}
 
     // Sanity check
-    if (todaysDate.isBefore(prevDate)) { return Long.valueOf(0);}
+    if (todaysDate.isBefore(prevDate)) { return (long) 0;}
 
     long totalBusinessDays = ChronoUnit.DAYS.between(prevDate, todaysDate);
 

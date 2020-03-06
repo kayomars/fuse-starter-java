@@ -23,8 +23,6 @@ public class DailyPrices {
   @Id
   private String stockSymbol;
 
-  private String freshnessDate;
-
   @Id
   private String relatedDate;
 

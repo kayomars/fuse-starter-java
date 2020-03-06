@@ -1,11 +1,12 @@
 package org.galatea.starter.entrypoint;
 
+import java.util.List;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.aspect4log.Log;
 import net.sf.aspect4log.Log.Level;
-import org.galatea.starter.service.AlphaVantageResponse;
+import org.galatea.starter.domain.DailyPrices;
 import org.galatea.starter.service.StockPricesService;
 import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
@@ -31,10 +32,9 @@ public class StockPricesRestController {
    */
   @GetMapping(value = "${mvc.stocks.getPricesForDaysPath}", produces = {
       MediaType.APPLICATION_JSON_VALUE})
-  public void getPrices(
+  public List<DailyPrices> getPrices(
       @RequestParam(value = "stock") final String stockSymbol, @RequestParam(value = "days") final int numDays) {
-    stockPricesService.getStockPrices(stockSymbol, numDays);
-    return;
+     return stockPricesService.getStockPrices(stockSymbol, numDays);
   }
 
 }

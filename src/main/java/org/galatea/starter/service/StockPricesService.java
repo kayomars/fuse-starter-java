@@ -1,5 +1,6 @@
 package org.galatea.starter.service;
 
+import org.galatea.starter.domain.rpsy.IStocksRpsy;
 import org.galatea.starter.utils.DateTimeUtils;
 
 import java.util.List;
@@ -27,71 +28,52 @@ public class StockPricesService {
   @NonNull
   private AlphaVantageResponseTranslator avTranslator;
 
-  // injecting in stocks repository services to make relevant DB actions
+  // injecting in stocks repository to make relevant DB actions
   @NonNull
-  private StocksRpsyService stocksRpsyService;
+  private IStocksRpsy stocksRpsy;
 
   // ALL THE LOGIC FOR DATABASE PULLS OR API PULLS WILL GO HERE
   /**
    * Function that will be the starting point of the logic chain that will
    * be constructed next. Currently queries AV API, stores all to DB and then pulls all from DB
    */
-  public void getStockPrices(final String stockSymbol, final int numDays) {
+  public List<DailyPrices> getStockPrices(final String stockSymbol, final int numDays) {
 
     boolean isAllDataThere = false;
     boolean isFullCallNeeded = true;
 
-    // First getting info from DB
-    List<DailyPrices> retrievedFromDB = stocksRpsyService.findEntriesInDescDateOrder(stockSymbol);
+    List<DailyPrices> mostRecentEntry = stocksRpsy.findTop1ByStockSymbolOrderByRelatedDateDesc(stockSymbol);
 
-    if (!retrievedFromDB.isEmpty()) {
+    if (!mostRecentEntry.isEmpty()) {
 
       // Freshness check
-      String dateOfRecentEntry = retrievedFromDB.get(0).getRelatedDate();
-      Long businessDaysSinceRecentEntry = DateTimeUtils.numOfBusinessDaysFromToday(dateOfRecentEntry);
-      isAllDataThere = (businessDaysSinceRecentEntry <= 0);
-      isFullCallNeeded = (businessDaysSinceRecentEntry > 100);
+      String dateOfRecentEntry = mostRecentEntry.get(0).getRelatedDate();
 
-      // Checking date of last entry
-      String dateOfLastEntry = retrievedFromDB.get(retrievedFromDB.size() - 1).getRelatedDate();
-
-      // Check how many days ago last entry represents
-      Long daysOld = DateTimeUtils.findNumofAllDaysFromDate(dateOfLastEntry);
-
-      // We have all the info in the DB
-      if (daysOld >= numDays) {
-        log.info("All needed data found in DB");
-      } else {
-        log.info("Need to possibly pull from AV");
-        //TODO insert check for last date overall and then
-        isAllDataThere = false;
-        isFullCallNeeded = true;
-      }
+      isAllDataThere = ( DateTimeUtils.numOfBusinessDaysFromToday(dateOfRecentEntry) <= 0 );
+      isFullCallNeeded = DateTimeUtils.isNumOfBusinessDaysOver100(dateOfRecentEntry);
     }
 
-    // Deal with pulls from AV
+    // Handle pulls from AV
     if (!isAllDataThere) {
       AlphaVantageResponse thisAlphaResponse;
       if (isFullCallNeeded) {
-        log.info("Doing a full pull");
+        log.info("Doing a Full Pull from AV for symbol: {}", stockSymbol);
         thisAlphaResponse = getStockPricesFromAVAll(stockSymbol);
       } else {
-        log.info("Doing a compact pull");
+        log.info("Doing a Compact Pull from AV for symbol: {}", stockSymbol);
         thisAlphaResponse = getStockPricesFromAVCompact(stockSymbol);
       }
 
-      // Creating all the Daily Prices objects
+      // Creating and saving DailyPrices objects
       List<DailyPrices> allDailyPrices = avTranslator.createAllDailyPricesObjects(thisAlphaResponse);
-
-      //Saving all to DB
-      stocksRpsyService.saveAllEntities(allDailyPrices);
+      stocksRpsy.saveAll(allDailyPrices);
     }
 
-    // Figure out what date n reflects and only return that many entries
+    // Figure out what date numDays reflects and only return entries from that or newer dates
     String dateNDaysAgo = DateTimeUtils.findDateNDaysAgo((long)numDays);
-    log.info(stocksRpsyService.findEntriesInDescDateOrderWithDateGreaterEqualThan(stockSymbol, dateNDaysAgo).toString());
 
-    return;
+    return stocksRpsy.findByStockSymbolAndRelatedDateGreaterThanEqualOrderByRelatedDateDesc(stockSymbol, dateNDaysAgo);
+
   }
 
   /**

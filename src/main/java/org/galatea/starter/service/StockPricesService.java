@@ -39,7 +39,7 @@ public class StockPricesService {
   public void getStockPrices(final String stockSymbol, final int numDays) {
 
     boolean isAllDataThere = false;
-    boolean isFullCallNeeded = false;
+    boolean isFullCallNeeded = true;
 
     // First getting info from DB
     List<DailyPrices> retrievedFromDB = stocksRpsyService.findEntriesInDescDateOrder(stockSymbol);

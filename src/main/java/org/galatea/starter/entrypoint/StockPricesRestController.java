@@ -31,9 +31,10 @@ public class StockPricesRestController {
    */
   @GetMapping(value = "${mvc.stocks.getPricesForDaysPath}", produces = {
       MediaType.APPLICATION_JSON_VALUE})
-  public AlphaVantageResponse getPrices(
+  public void getPrices(
       @RequestParam(value = "stock") final String stockSymbol, @RequestParam(value = "days") final int numDays) {
-    return stockPricesService.getStockPrices(stockSymbol, numDays);
+    stockPricesService.getStockPrices(stockSymbol, numDays);
+    return;
   }
 
 }

@@ -40,7 +40,22 @@ public class StocksRpsyService {
   }
 
   /**
-   * Retrieve multiple DailyPrices entries with matching stockSymbol from the database, in a descending data order.
+   * Retrieve multiple DailyPrices entries with matching stockSymbol from the database, in a descending date order.
+   * This will order the entries so that the most recent dated entry will be first.
+   * @param stockSymbol a string comprising of the symbol of the stock
+   */
+  public List<DailyPrices> findEntriesInDescDateOrderWithDateGreaterEqualThan(final String stockSymbol, final String dateGreaterThan) {
+    log.info("Retrieving all entries with stock symbol: {}, with dates >= {}", stockSymbol, dateGreaterThan);
+
+    List<DailyPrices> retrievedEntries = Lists.newArrayList(
+        stocksRepo.findByStockSymbolAndRelatedDateGreaterThanEqualOrderByRelatedDateDesc(stockSymbol, dateGreaterThan));
+
+    return retrievedEntries;
+  }
+
+  /**
+   * Retrieve multiple DailyPrices entries with matching stockSymbol from the database, in a descending date
+   * order with dates only greater or equal to a provided date.
    * This will order the entries so that the most recent dated entry will be first.
    * @param stockSymbol a string comprising of the symbol of the stock
    */

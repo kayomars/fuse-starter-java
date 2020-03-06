@@ -11,4 +11,6 @@ public interface IStocksRpsy extends JpaRepository<DailyPrices, Long> {
   List<DailyPrices> findAllByStockSymbol(String stockSymbol);
 
   List<DailyPrices> findByStockSymbolOrderByRelatedDateDesc(String stockSymbol);
+
+  List<DailyPrices> findByStockSymbolAndRelatedDateGreaterThanEqualOrderByRelatedDateDesc(String stockSymbol, String neededDate);
 }

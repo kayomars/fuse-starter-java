@@ -1,6 +1,9 @@
 package org.galatea.starter.entrypoint;
 
 import java.util.List;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.PositiveOrZero;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -26,14 +29,19 @@ public class StockPricesRestController {
 
   /**
    * Exposes an endpoint to get the prices of a given stock in the last N days.
+   * @param numDays, the integer representation of the number of days
    * @param stockSymbol the String representation of the stock symbol
-   * @param numDays, the int representation of the number of days
    * @return a list of all stock prices of that given stock in the last N days.
    */
   @GetMapping(value = "${mvc.stocks.getPricesForDaysPath}", produces = {
       MediaType.APPLICATION_JSON_VALUE})
   public List<DailyPrices> getPrices(
-      @RequestParam(value = "stock") final String stockSymbol, @RequestParam(value = "days") final int numDays) {
+      @RequestParam(value = "stock")
+      @NotNull(message = "Symbol cannot be empty")
+      final String stockSymbol,
+      @RequestParam(value = "days")
+      @PositiveOrZero(message = "N must be a non-negative integer")
+      final Integer numDays) {
      return stockPricesService.getStockPrices(stockSymbol, numDays);
   }
 

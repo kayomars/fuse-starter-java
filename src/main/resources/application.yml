@@ -20,6 +20,9 @@ mvc:
    stocks:
       getPricesForDaysPath: /prices
 
+initial:
+   symbol: MSFT
+
 
 # Set debug level logging for the AV Client so that Feign requests and responses are logged out
 log.level.org.galatea.starter.service.AlphaVantageClient: DEBUG

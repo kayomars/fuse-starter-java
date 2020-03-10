@@ -3,21 +3,59 @@ package org.galatea.starter.utils;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
-import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
+import org.galatea.starter.domain.DailyPrices;
+import org.springframework.stereotype.Component;
 
 @Slf4j
-// NEED ERROR CHECKING FOR WHEN FUTURE DATES ARE PROVIDED
+@Component
 public class DateTimeUtils {
 
-  // Creating all relevant holidays
-  static Set<String> allHolidays = new HashSet<>(Arrays.asList("2020-12-25", "2020-11-26",
-      "2020-09-07", "2020-07-03", "2020-05-25", "2020-04-10", "2020-02-17", "2020-01-20",
-      "2020-01-01",
-      "2019-12-25", "2019-11-22", "2019-09-03", "2019-07-04", "2019-05-28", "2019-03-30",
-      "2019-02-19", "2019-01-15", "2019-01-01"));
+
+  @Setter
+  @Getter
+  static Set<String> allHolidays = new HashSet<>();
+
+  /**
+   * Used to initialize static list of all holidays that occurred since 100 business
+   * dats ago
+   * @param allDailyPrices list of all DailyPrices objects used in the initialization
+   */
+  public static void initializeHolidays(List<DailyPrices> allDailyPrices) {
+
+    for (int i = allDailyPrices.size() - 1; i > 0; i--) {
+
+      // First date needs to be incremented so it isnt included in datesUntil calcs used below
+      LocalDate firstDate = LocalDate.parse(allDailyPrices.get(i).getRelatedDate()).plusDays(1);
+      LocalDate secondDate = LocalDate.parse(allDailyPrices.get(i - 1).getRelatedDate());
+
+      List<LocalDate> dates = firstDate.datesUntil(secondDate).collect(Collectors.toList());
+
+      for (LocalDate thisDate : dates) {
+
+        DayOfWeek dow = thisDate.getDayOfWeek();
+        if (!(dow.equals(DayOfWeek.SATURDAY) || dow.equals(DayOfWeek.SUNDAY))) {
+          addToHolidays(thisDate.toString());
+        }
+      }
+    }
+  }
+
+
+  /**
+   * Adds a date to set of holidays
+   * @param thisDate the date in YYYY-MM-DD format
+   */
+  public static void addToHolidays(String thisDate) {
+    allHolidays.add(thisDate);
+  }
+
 
   /**
    * Given the number of days N as an int, it will find the date N days ago and return it
@@ -75,12 +113,6 @@ public class DateTimeUtils {
 
     LocalDate todaysDate = LocalDate.now();
     LocalDate prevDate = LocalDate.parse(otherDate);
-
-    // Check to see if it is the same day
-    if (todaysDate.isEqual(prevDate)) { return (long) 0;}
-
-    // Sanity check
-    if (todaysDate.isBefore(prevDate)) { return (long) 0;}
 
     long totalBusinessDays = ChronoUnit.DAYS.between(prevDate, todaysDate);
 

@@ -2,13 +2,14 @@ package org.galatea.starter.service;
 
 import org.galatea.starter.domain.rpsy.IStocksRpsy;
 import org.galatea.starter.utils.DateTimeUtils;
-
 import java.util.List;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.galatea.starter.domain.DailyPrices;
 import org.galatea.starter.translators.AlphaVantageResponseTranslator;
+import org.springframework.boot.context.event.ApplicationReadyEvent;
+import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
 
 /**
@@ -31,6 +32,18 @@ public class StockPricesService {
   // injecting in stocks repository to make relevant DB actions
   @NonNull
   private IStocksRpsy stocksRpsy;
+
+  // Initializes the set of past holidays in the last 100 business days at application ready
+  @EventListener(ApplicationReadyEvent.class)
+  public void initializeAllHolsOnStartUp() {
+
+    log.info("Initializing allHolidays from AV using symbol: {} ", "MSFT");
+    AlphaVantageResponse thisAlphaResponse = getStockPricesFromAVCompact( "MSFT");
+    List<DailyPrices> allDailyPrices = avTranslator.createAllDailyPricesObjects(thisAlphaResponse);
+
+    DateTimeUtils.initializeHolidays(allDailyPrices);
+  }
+
 
   // ALL THE LOGIC FOR DATABASE PULLS OR API PULLS WILL GO HERE
   /**

@@ -1,6 +1,5 @@
 package org.galatea.starter.translators;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -25,9 +24,8 @@ public class AlphaVantageResponseTranslator {
    */
   public List<DailyPrices> createAllDailyPricesObjects(AlphaVantageResponse avResp) {
 
-    List<DailyPrices> allDailyPrices = new ArrayList<DailyPrices>();
+    List<DailyPrices> allDailyPrices = new ArrayList<>();
     String stockSymbol = avResp.getAllMetaData().getStockSymbol();
-    String freshnessDate = avResp.getAllMetaData().getFreshnessDate();
 
     for (Map.Entry mapElement : avResp.getAllTimeSeriesData().entrySet()) {
       String relatedDate = (String)mapElement.getKey();
@@ -36,7 +34,6 @@ public class AlphaVantageResponseTranslator {
       // Build out instances of entity DailyPrices
       DailyPrices curDailyPrice = DailyPrices.builder()
           .stockSymbol(stockSymbol)
-          .freshnessDate(freshnessDate)
           .relatedDate(relatedDate)
           .open(relatedPrices.getOpen())
           .high(relatedPrices.getHigh())

@@ -15,7 +15,7 @@ public interface AlphaVantageClient {
    * Get a list of all historical stock prices for a specific stock from AlphaVantage
    * @return a list of all of the historical prices of a stock
    * */
-  @GetMapping("query?function=TIME_SERIES_DAILY&symbol={symbol}&apikey=${keys.AVKey}")
+  @GetMapping("query?function=TIME_SERIES_DAILY&symbol={symbol}&outputsize=full&apikey=${keys.AVKey}")
   AlphaVantageResponse getAllPricesOfStock(@PathVariable("symbol") String stockSymbol);
 
   /**
@@ -23,6 +23,6 @@ public interface AlphaVantageClient {
    * @return a list of prices of a stock for <= 100 days
    * */
   @GetMapping("query?function=TIME_SERIES_DAILY&symbol={symbol}&outputsize=compact&apikey=${keys.AVKey}")
-  AlphaVantageResponse getPricesOfStockForDays(@PathVariable("symbol") String stockSymbol);
+  AlphaVantageResponse getPricesOfStockCompact(@PathVariable("symbol") String stockSymbol);
 
 }

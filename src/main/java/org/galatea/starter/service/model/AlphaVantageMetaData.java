@@ -22,7 +22,6 @@ public class AlphaVantageMetaData {
   @JsonProperty("2. Symbol")
   private String stockSymbol;
 
-  // Might want to change this to some DateTime type
   @JsonProperty("3. Last Refreshed")
   private String freshnessDate;
 

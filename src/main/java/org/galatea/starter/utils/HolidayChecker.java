@@ -8,6 +8,7 @@ import org.galatea.starter.domain.DailyPrices;
 import org.galatea.starter.service.AlphaVantageResponse;
 import org.galatea.starter.service.StockPricesService;
 import org.galatea.starter.translators.AlphaVantageResponseTranslator;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -20,6 +21,9 @@ public class HolidayChecker {
 
   @NonNull
   private AlphaVantageResponseTranslator avTranslator;
+
+  @Value("${initial.defaultSymbol}")
+  private String defaultTicker;
 
   // Fires at 9.30AM every day
   @Scheduled(cron = "0 30 9 * * ?", zone = "EST")
@@ -38,8 +42,8 @@ public class HolidayChecker {
    */
   public boolean isTodayHoliday() {
 
-    log.info("Checking if today is a holiday from AV using symbol: {} ", "MSFT");
-    AlphaVantageResponse thisAlphaResponse = stockPricesService.getStockPricesFromAVCompact( "MSFT");
+    log.info("Checking if today is a holiday from AV using symbol: {} ", defaultTicker);
+    AlphaVantageResponse thisAlphaResponse = stockPricesService.getStockPricesFromAVCompact( defaultTicker);
     List<DailyPrices> allDailyPrices = avTranslator.createAllDailyPricesObjects(thisAlphaResponse);
 
     String mostRecentDate = allDailyPrices.get(0).getRelatedDate();

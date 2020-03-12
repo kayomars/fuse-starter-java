@@ -21,7 +21,8 @@ mvc:
       getPricesForDaysPath: /prices
 
 initial:
-   symbol: MSFT
+   isFirstRun: true
+   defaultSymbol: MSFT
 
 
 # Set debug level logging for the AV Client so that Feign requests and responses are logged out

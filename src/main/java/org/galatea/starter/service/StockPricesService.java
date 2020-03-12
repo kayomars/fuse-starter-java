@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.galatea.starter.domain.DailyPrices;
 import org.galatea.starter.translators.AlphaVantageResponseTranslator;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
@@ -33,17 +34,8 @@ public class StockPricesService {
   @NonNull
   private IStocksRpsy stocksRpsy;
 
-  // Initializes the set of past holidays in the last 100 business days at application ready
-  @EventListener(ApplicationReadyEvent.class)
-  public void initializeAllHolsOnStartUp() {
-
-    log.info("Initializing allHolidays from AV using symbol: {} ", "MSFT");
-    AlphaVantageResponse thisAlphaResponse = getStockPricesFromAVCompact( "MSFT");
-    List<DailyPrices> allDailyPrices = avTranslator.createAllDailyPricesObjects(thisAlphaResponse);
-
-    DateTimeUtils.initializeHolidays(allDailyPrices);
-  }
-
+  @Value("${initial.isFirstRun}")
+  private boolean isFirstRun;
 
   // ALL THE LOGIC FOR DATABASE PULLS OR API PULLS WILL GO HERE
   /**
@@ -68,6 +60,7 @@ public class StockPricesService {
 
     // Handle pulls from AV
     if (!isAllDataThere) {
+
       AlphaVantageResponse thisAlphaResponse;
       if (isFullCallNeeded) {
         log.info("Doing a Full Pull from AV for symbol: {}", stockSymbol);
@@ -80,6 +73,13 @@ public class StockPricesService {
       // Creating and saving DailyPrices objects
       List<DailyPrices> allDailyPrices = avTranslator.createAllDailyPricesObjects(thisAlphaResponse);
       stocksRpsy.saveAll(allDailyPrices);
+
+      // Prepopulate holidays in the case of an initial run
+      if (isFirstRun) {
+        log.info("Initializing allHolidays from AV using symbol: {} ", stockSymbol);
+        DateTimeUtils.initializeHolidays(allDailyPrices);
+        isFirstRun = false;
+      }
     }
 
     // Figure out what date numDays reflects and only return entries from that or newer dates

@@ -1,5 +1,6 @@
 package org.galatea.starter.utils;
 
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.List;
 import lombok.NonNull;
@@ -29,10 +30,12 @@ public class HolidayChecker {
   @Scheduled(cron = "0 30 9 * * ?", zone = "EST")
   public void doHolidayRelatedActions() {
 
-    if (isTodayHoliday()) {
+    LocalDate todaysDate = LocalDate.now();
+    DayOfWeek dow = todaysDate.getDayOfWeek();
+
+    if ( isTodayHoliday() && !dow.equals(DayOfWeek.SATURDAY) && !dow.equals(DayOfWeek.SUNDAY) ){
       DateTimeUtils.addToHolidays(LocalDate.now().toString());
     }
-
   }
 
   /**
